@@ -1,0 +1,18 @@
+version: "3"
+
+volumes:
+  modules:
+
+networks:
+  nginx_network:
+    external: true
+
+services:
+  node:
+    command: npm run dev --port 3000
+    build: express
+    volumes:
+      - ./express:/node
+      - modules:/node/node_modules
+    networks:
+      - nginx_network
