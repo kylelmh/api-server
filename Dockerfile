@@ -1,7 +1,6 @@
 FROM python:3.9-alpine as base
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-COPY requirements.txt /code/requirements.txt
 RUN apk add --update --no-cache --virtual .build-deps \
     build-base \
     postgresql-dev \
@@ -12,6 +11,8 @@ RUN apk add --update --no-cache --virtual .build-deps \
     zlib-dev \
     musl-dev \
     libpq
+
+ADD requirements.txt /code/requirements.txt
 RUN pip3 install -r /code/requirements.txt
 
 FROM python:3.9-alpine
