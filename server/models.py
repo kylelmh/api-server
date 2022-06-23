@@ -1,5 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
-
+from datetime import datetime
 # Create your models here.
 
 class TimestampedModel(models.Model):
@@ -9,21 +10,23 @@ class TimestampedModel(models.Model):
     abstract = True
 
 class Employment(TimestampedModel):
-  start_date = models.DateField
-  end_date = models.DateField
-  position = models.JSONField
+  start_date = models.DateField(default=datetime.now)
+  end_date = models.DateField(default=datetime.now)
+  position = models.JSONField(default=dict)
   status = models.CharField(max_length=255)
-  company = models.JSONField
-  description = models.JSONField
+  company = models.JSONField(default=dict)
+  description = models.JSONField(default=dict)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 class Education(TimestampedModel):
-  start_date = models.DateField
-  end_date = models.DateField
-  school = models.JSONField
-  faculty = models.JSONField
-  department = models.JSONField
+  start_date = models.DateField(default=datetime.now)
+  end_date = models.DateField(default=datetime.now)
+  school = models.JSONField(default=dict)
+  faculty = models.JSONField(default=dict)
+  department = models.JSONField(default=dict)
+  description = models.JSONField(default=dict)
   degree = models.CharField(max_length=255)
-  description = models.JSONField
+  user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 class Skill(TimestampedModel):
   type = models.CharField(max_length=64)

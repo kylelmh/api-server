@@ -9,10 +9,13 @@ class EmploymentType(DjangoObjectType):
 
 class Query(object):
   all_employments = graphene.List(EmploymentType)
+  employments = graphene.List(EmploymentType, user=graphene.Int())
 
   def resolve_all_employments(self, info, **kwargs):
     return Employment.objects.all()
 
+  def resolve_employments(self, info, user):
+    return Employment.objects.filter(user=user)
 class CreateEmployment(graphene.Mutation):
     employment= graphene.Field(EmploymentType)
 

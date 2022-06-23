@@ -2,6 +2,7 @@ version: '3'
    
 services:
   apidb:
+    restart: always
     image: postgres:alpine
     volumes:
       - ./data/db:/var/lib/postgresql/data
@@ -11,6 +12,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   api:
+    restart: always
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
