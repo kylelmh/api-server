@@ -43,7 +43,7 @@ class Employment(TimestampedModel):
   def __str__(self):
     return f'{self.start_date} - {self.end_date}: {self.position_en} - {self.company_en}'
 
-class SkillTags(TimestampedModel):
+class SkillTag(TimestampedModel):
   name = models.CharField(max_length=255)
   employments = models.ManyToManyField(Employment, related_name='skill_tags')
 
