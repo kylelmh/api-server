@@ -24,7 +24,7 @@ class Person(TimestampedModel):
 
 class Employment(TimestampedModel):
   start_date = models.DateField(default=datetime.now)
-  end_date = models.DateField(default=datetime.now)
+  end_date = models.DateField(null=True, blank=True)
   # en
   company_en = models.CharField(max_length=255)
   position_en = models.CharField(max_length=255)
