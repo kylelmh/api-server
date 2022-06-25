@@ -1,6 +1,7 @@
 import graphene
 from server.models import *
 from .types import *
+from .decorators import *
 
 class CreateEmployment(graphene.Mutation):
   class Arguments:
@@ -21,6 +22,7 @@ class CreateEmployment(graphene.Mutation):
   ok = graphene.Boolean()
   employment = graphene.Field(EmploymentType)
 
+  @authenticated_only
   def mutate(root, info, **kwargs):
     ok = graphene.Boolean()
     employment = Employment(**kwargs)
@@ -31,30 +33,12 @@ class EditEmployment(CreateEmployment):
   class Arguments(CreateEmployment.Arguments):
     id = graphene.Int()
 
+  @authenticated_only
   def mutate(root, info, id, **kwargs):
     employment = Employment(pk=id, **kwargs)
     employment.save(update_fields=kwargs.keys())
     return EditEmployment(ok=True, employment=employment)
 
-class CreatePerson(graphene.Mutation):
-  class Arguments:
-    name = graphene.String()
-    date_of_birth = graphene.Date()
-    email = graphene.String()
-    phone = graphene.String()
-    city = graphene.String()
-    country = graphene.String()
-  
-  ok = graphene.Boolean()
-  person = graphene.Field(PersonType)
-
-  def mutate(root, info, **kwargs):
-    ok = graphene.Boolean()
-    person = Person(**kwargs)
-    person.save()
-    return CreatePerson(ok=ok, person=person)
-
 class Mutation(graphene.ObjectType):
   create_employment = CreateEmployment.Field()
   edit_employment = EditEmployment.Field()
-  create_person = CreatePerson.Field()
