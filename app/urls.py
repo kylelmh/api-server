@@ -17,8 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 from graphene_django.views import GraphQLView
 from .schema import schema
+import os
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(f'{os.environ.get("ADMIN_URL")}/', admin.site.urls),
     path('', GraphQLView.as_view(graphiql=True, schema=schema))
 ]

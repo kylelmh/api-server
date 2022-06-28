@@ -1,5 +1,9 @@
 version: '3'
    
+networks:
+  nginx_network:
+      external: true
+
 services:
   apidb:
     restart: always
@@ -15,11 +19,9 @@ services:
     restart: always
     build: .
     command: sh deploy.sh
-    ports:
-      - 8000:8000 
     volumes:
       - .:/code
-      - static-data:/vol/web/static
+      - static-data:${STATIC_ROOT}
     environment:
       - POSTGRES_HOST=apidb
       - POSTGRES_NAME=${POSTGRES_NAME}
@@ -27,9 +29,14 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - SECRET_KEY=${SECRET_KEY}
       - STATIC_ROOT=${STATIC_ROOT}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - ADMIN_URL=${ADMIN_URL}
       - DEBUG=0
     depends_on:
       - apidb
+    networks:
+      - nginx_network
+      - default
 
 volumes:
   db-data:
