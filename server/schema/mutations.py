@@ -121,7 +121,7 @@ class EditPerson(CreatePerson):
 
 class CreateSkill(graphene.Mutation):
   class Arguments:
-    type = graphene.String()
+    skill_type = graphene.String()
     name = graphene.String()
     proficieny = graphene.Int()
     # foreign keys

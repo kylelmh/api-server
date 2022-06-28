@@ -77,10 +77,10 @@ class Publication(TimestampedModel):
   employment = models.ForeignKey(Employment, null=True, on_delete=models.DO_NOTHING)
 
 class Skill(TimestampedModel):
-  type = models.CharField(max_length=64)
+  skill_type = models.CharField(max_length=64)
   name = models.CharField(max_length=255)
   profiency = models.IntegerField(choices=[(1,1),(2,2),(3,3),(4,4),(5,5)])
   person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
   def __str__(self):
-    return f'{self.person.name}: {self.type} - {self.name}({self.profiency})'
+    return f'{self.person.name}: {self.skill_type} - {self.name}({self.profiency})'
