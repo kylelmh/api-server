@@ -25,6 +25,7 @@ class Person(TimestampedModel):
 class Employment(TimestampedModel):
   start_date = models.DateField(default=datetime.now)
   end_date = models.DateField(null=True, blank=True)
+  skill_tags = ArrayField(default=list, base_field=models.CharField(max_length=255))
   # en
   company_en = models.CharField(max_length=255)
   position_en = models.CharField(max_length=255)
@@ -42,12 +43,6 @@ class Employment(TimestampedModel):
 
   def __str__(self):
     return f'{self.start_date} - {self.end_date}: {self.position_en} - {self.company_en}'
-
-class SkillTag(TimestampedModel):
-  name = models.CharField(max_length=255, primary_key=True, unique=True)
-  employments = models.ManyToManyField(Employment, related_name='skill_tags', blank=True)
-  def __str__(self):
-    return self.name
 
 class Education(TimestampedModel):
   start_date = models.DateField(default=datetime.now)
