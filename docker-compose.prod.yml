@@ -1,0 +1,36 @@
+version: '3'
+   
+services:
+  apidb:
+    restart: always
+    image: postgres:alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_NAME=${POSTGRES_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  api:
+    restart: always
+    build: .
+    command: sh deploy.sh
+    ports:
+      - 8000:8000 
+    volumes:
+      - .:/code
+      - static-data:/vol/web/static
+    environment:
+      - POSTGRES_HOST=apidb
+      - POSTGRES_NAME=${POSTGRES_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - STATIC_ROOT=${STATIC_ROOT}
+      - DEBUG=0
+    depends_on:
+      - apidb
+
+volumes:
+  db-data:
+  static-data:
