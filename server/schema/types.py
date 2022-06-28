@@ -14,6 +14,10 @@ class EducationType(DjangoObjectType):
   class Meta:
     model = Education
 
+class SkillType(DjangoObjectType):
+  class Meta:
+    model = Skill
+
 class SkillTagType(DjangoObjectType):
   class Meta:
     model = SkillTag

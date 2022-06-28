@@ -21,6 +21,7 @@ class CreateEmployment(graphene.Mutation):
     examples_ja = graphene.List(graphene.String)
     # foreign keys
     person_id = graphene.Int()
+    skill_tags = graphene.List(graphene.String)
 
   ok = graphene.Boolean()
   employment = graphene.Field(EmploymentType)
@@ -85,8 +86,99 @@ class EditEducation(CreateEducation):
     education.save(update_fields=kwargs.keys())
     return EditEducation(ok=True, education=education)
 
+class CreatePerson(graphene.Mutation):
+  class Arguments:
+    first_name = graphene.String()
+    name = graphene.String()
+    date_of_birth = graphene.Date()
+    email = graphene.String()
+    phone = graphene.String()
+    city = graphene.String()
+    country =  graphene.String()
+
+  ok = graphene.Boolean()
+  person = graphene.Field(PersonType)
+
+  @authenticated_only
+  def mutate(root, info, **kwargs):
+    ok = graphene.Boolean()
+    person = Person(**kwargs)
+    person.save()
+    return CreatePerson(ok=ok, person=person)
+
+class EditPerson(CreatePerson):
+  class Arguments(CreatePerson.Arguments):
+    id = graphene.Int()
+  
+  ok = graphene.Boolean()
+  person = graphene.Field(PersonType)
+
+  @authenticated_only
+  def mutate(root, info, id, **kwargs):
+    person = Person(pk=id, **kwargs)
+    person.save(update_fields=kwargs.keys())
+    return EditPerson(ok=True, person=person)
+
+class CreateSkill(graphene.Mutation):
+  class Arguments:
+    type = graphene.String()
+    name = graphene.String()
+    proficieny = graphene.Int()
+    # foreign keys
+    person_id = graphene.Int()
+
+  ok = graphene.Boolean()
+  skill = graphene.Field(SkillType)
+
+  def mutate(root, info, **kwargs):
+    ok = graphene.Boolean()
+    skill = Skill(**kwargs)
+    skill.save()
+    return CreateSkill(ok=ok, skill=skill)
+
+class EditSkill(CreateSkill):
+  class Arguments(CreateSkill.Arguments):
+    id = graphene.Int()
+  
+  ok = graphene.Boolean()
+  skill = graphene.Field(SkillType)
+
+  def mutate(root, info, id, **kwargs):
+    skill = Skill(pk=id, **kwargs)
+    skill.save(update_fields=kwargs.keys())
+    return EditSkill(ok=True, skill=skill)
+
+class CreateSkillTag(graphene.Mutation):
+  class Arguments():
+    name = graphene.String()
+    employments = graphene.List(graphene.Int)
+  
+  ok = graphene.Boolean()
+  skill_tag = graphene.Field(SkillTagType)
+
+  def mutate(root, info, **kwargs):
+    skill_tag = SkillTag(**kwargs)
+    skill_tag.save()
+    return CreateSkillTag(ok=True, skill_tag=skill_tag)
+
+class EditSkillTag(CreateSkillTag):
+  ok = graphene.Boolean()
+  skill_tag = graphene.Field(SkillTagType)
+
+  def mutate(root, info, **kwargs):
+    skill_tag = SkillTag(**kwargs)
+    skill_tag.save(update_fields=kwargs.keys())
+    return EditSkillTag(ok=True, skill_tag=skill_tag)
+
 class Mutation(graphene.ObjectType):
   create_employment = CreateEmployment.Field()
   edit_employment = EditEmployment.Field()
   create_education = CreateEducation.Field()
   edit_education = EditEducation.Field()
+  create_person = CreatePerson.Field()
+  edit_person = EditPerson.Field()
+  create_skill = CreateSkill.Field()
+  edit_skill = EditSkill.Field()
+  create_skill_tag = CreateSkillTag.Field()
+  edit_skill_tag = EditSkillTag.Field()
+

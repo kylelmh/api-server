@@ -1,4 +1,3 @@
-import enum
 from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
@@ -12,6 +11,7 @@ class TimestampedModel(models.Model):
     abstract = True
 
 class Person(TimestampedModel):
+  first_name = models.CharField(max_length=255)
   name = models.CharField(max_length=255)
   date_of_birth = models.DateField(default=datetime.now)
   email = models.EmailField(max_length=255)
@@ -44,9 +44,8 @@ class Employment(TimestampedModel):
     return f'{self.start_date} - {self.end_date}: {self.position_en} - {self.company_en}'
 
 class SkillTag(TimestampedModel):
-  name = models.CharField(max_length=255)
-  employments = models.ManyToManyField(Employment, related_name='skill_tags')
-
+  name = models.CharField(max_length=255, primary_key=True, unique=True)
+  employments = models.ManyToManyField(Employment, related_name='skill_tags', blank=True)
   def __str__(self):
     return self.name
 
@@ -79,8 +78,9 @@ class Publication(TimestampedModel):
 
 class Skill(TimestampedModel):
   type = models.CharField(max_length=64)
-  name = models.CharField(max_length=100)
+  name = models.CharField(max_length=255)
   profiency = models.IntegerField(choices=[(1,1),(2,2),(3,3),(4,4),(5,5)])
+  person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
   def __str__(self):
-    return f'{self.type} - {self.name}({self.profiency})'
+    return f'{self.person.name}: {self.type} - {self.name}({self.profiency})'
