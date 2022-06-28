@@ -130,6 +130,7 @@ class CreateSkill(graphene.Mutation):
   ok = graphene.Boolean()
   skill = graphene.Field(SkillType)
 
+  @authenticated_only
   def mutate(root, info, **kwargs):
     ok = graphene.Boolean()
     skill = Skill(**kwargs)
@@ -143,6 +144,7 @@ class EditSkill(CreateSkill):
   ok = graphene.Boolean()
   skill = graphene.Field(SkillType)
 
+  @authenticated_only
   def mutate(root, info, id, **kwargs):
     skill = Skill(pk=id, **kwargs)
     skill.save(update_fields=kwargs.keys())
@@ -156,6 +158,7 @@ class CreateSkillTag(graphene.Mutation):
   ok = graphene.Boolean()
   skill_tag = graphene.Field(SkillTagType)
 
+  @authenticated_only
   def mutate(root, info, **kwargs):
     skill_tag = SkillTag(**kwargs)
     skill_tag.save()
@@ -165,6 +168,7 @@ class EditSkillTag(CreateSkillTag):
   ok = graphene.Boolean()
   skill_tag = graphene.Field(SkillTagType)
 
+  @authenticated_only
   def mutate(root, info, **kwargs):
     skill_tag = SkillTag(**kwargs)
     skill_tag.save(update_fields=kwargs.keys())
