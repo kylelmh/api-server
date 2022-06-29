@@ -68,14 +68,18 @@ class Education(TimestampedModel):
   
 class Publication(TimestampedModel):
   citation = models.CharField(max_length=255)
-  education = models.ForeignKey(Education, null=True, on_delete=models.DO_NOTHING)
-  employment = models.ForeignKey(Employment, null=True, on_delete=models.DO_NOTHING)
+  education = models.ForeignKey(Education, null=True, blank=True, on_delete=models.DO_NOTHING)
+  employment = models.ForeignKey(Employment, null=True, blank=True, on_delete=models.DO_NOTHING)
 
 class Skill(TimestampedModel):
-  skill_type = models.CharField(max_length=64)
+  skill_type = models.CharField(default="", max_length=63)
   name = models.CharField(max_length=255)
+  description_en = models.CharField(default="", max_length=255)
+  description_ja = models.CharField(default="", max_length=255)
+  certifications = ArrayField(default=list, null=True, blank=True, base_field=models.CharField(max_length=255))
   profiency = models.IntegerField(choices=[(1,1),(2,2),(3,3),(4,4),(5,5)])
   person = models.ForeignKey(Person, on_delete=models.CASCADE)
+
 
   def __str__(self):
     return f'{self.person.name}: {self.skill_type} - {self.name}({self.profiency})'

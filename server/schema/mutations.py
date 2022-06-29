@@ -124,6 +124,9 @@ class CreateSkill(graphene.Mutation):
     skill_type = graphene.String()
     name = graphene.String()
     proficieny = graphene.Int()
+    description_en = graphene.String()
+    description_ja = graphene.String()
+    certifications = graphene.List(graphene.String)
     # foreign keys
     person_id = graphene.Int()
 
