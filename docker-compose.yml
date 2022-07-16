@@ -6,10 +6,7 @@ services:
     image: postgres:alpine
     volumes:
       - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_NAME=${POSTGRES_NAME}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file: .env.sample
 
   api:
     restart: always
@@ -19,13 +16,8 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+    env_file: .env.sample
     environment:
-      - POSTGRES_HOST=apidb
-      - POSTGRES_NAME=${POSTGRES_NAME}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - SECRET_KEY=changeme
       - DEBUG=1
-      - ADMIN_URL=${ADMIN_URL}
     depends_on:
       - apidb

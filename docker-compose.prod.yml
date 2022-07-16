@@ -10,10 +10,7 @@ services:
     image: postgres:alpine
     volumes:
       - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_NAME=${POSTGRES_NAME}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file: .env
 
   api:
     restart: always
@@ -22,15 +19,8 @@ services:
     volumes:
       - .:/code
       - static-data:${STATIC_ROOT}
+    env_file: .env
     environment:
-      - POSTGRES_HOST=apidb
-      - POSTGRES_NAME=${POSTGRES_NAME}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - SECRET_KEY=${SECRET_KEY}
-      - STATIC_ROOT=${STATIC_ROOT}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-      - ADMIN_URL=${ADMIN_URL}
       - DEBUG=0
     depends_on:
       - apidb
